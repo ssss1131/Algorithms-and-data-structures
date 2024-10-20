@@ -1,4 +1,4 @@
-package main.java.com.ssss.algo.lab1;
+package main.java.com.ssss.algo.lab1_Queue_Stack;
 
 import java.util.*;
 import java.util.stream.Collectors;
