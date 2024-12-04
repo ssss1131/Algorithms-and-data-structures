@@ -30,8 +30,6 @@ public class MergeSort {
             }
             k++;
         }
-        left = null;
-        right = null;
     }
 
     static void mergeSort(int[] arr, int beg, int end) {
@@ -44,7 +42,7 @@ public class MergeSort {
     }
 
     public static void main(String[] args) {
-        int[] arr = {5,4,7,1,3,6};
+        int[] arr = {5,4,7,1,3,6, 10 , -1 , -2, -4, 15, 120, 2, 1, 4};
         mergeSort(arr, 0, arr.length-1);
         System.out.println(Arrays.toString(arr));
     }

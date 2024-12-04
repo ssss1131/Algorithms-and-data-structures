@@ -3,7 +3,7 @@ package main.java.com.ssss.algo.algorithms;
 public class RabinKarp {
 
 
-    private static final int MOD = 101;
+    private static final int MOD = 100_000_001;
     private static final int BASE = 128;
 
     public static boolean isExist(String str, String substr) {
