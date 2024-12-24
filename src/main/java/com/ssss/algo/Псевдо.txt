@@ -1,0 +1,986 @@
+большой шанс что придет - любые виды сортировок, heapify, kruskal/prim, dijikstra,флойд и форд, binary search
+низкий шанс что придет - DSU, BST, hash table, KMP, полная реализация какой то структуры(вероятнее 1-2 метода от туда, таких пометил "!!")
+
+
+!!в некоторых псевдокодах итерация начинается с 1 по n включительно а в некоторых с 0 по n не включая, как в проге !!
+
+<<------------------------------------------------------------------->>
+stack
+
+class Stack{
+    
+    int MAX_SIZE
+    int[] stack
+    int top = -1
+        
+    public Stack(int maxSize){
+        MAX_SIZE = maxSize;
+        stack = new int[MAX_SIZE]    
+    }
+
+
+    func isFull():   
+        top + 1 == MAX_SIZE
+    
+    
+    !!func push(value):
+        if(!isFull()):
+            stack[++top] = value
+    
+    !!func pop():
+        if(top!=-1):
+            return stack[top--]
+
+
+}
+
+
+<<---------------------------------->>
+Queue
+
+class Queue{
+    int MAX_SIZE
+    int front = 0
+    int rear = 0
+    int[] queue
+
+    public Queue(int maxSize){
+        MAX_SIZE = maxSize;
+        stack = new int[MAX_SIZE]    
+    }
+    
+    func isEmpty():
+        return rear == 0
+    
+
+    func isFull():
+        return rear == MAX_SIZE
+
+    !!func enqueue(value):
+        if(!isFull()):
+            queue[rear++] = value
+
+    !!func dequeue():
+        if(!isEmpty() && front <= MAX_SIZE):
+            return queue[front++]
+
+}
+
+<<---------------------------------->>
+Deque, шанс низкий так как сложный но если придет то любой метод может
+
+
+class Deque{
+
+    int MAX_SIZE
+    int front
+    int size
+    int rear
+    int[] deque
+
+    public Deque(int maxSize){
+        MAX_SIZE = maxSize
+        deque = new int[MAX_SIZE]
+        rear = front = -1
+        size = 0
+    }
+
+    func addFirst(value):
+        if(!isFull()):
+            if(isEmpty()):
+                front = rear = 0
+            else:
+                front = (front - 1 + MAX_SIZE) % MAX_SIZE
+	    deque[front] = value
+	    size++
+
+    func addLast(value):
+        if(!isFull()):
+            if(isEmpty()):
+                front = rear = 0
+	    else:
+                rear = (rear + 1) % MAX_SIZE
+        deque[rear] = value
+        size++
+
+    func removeFirst():
+        if(!isEmpty()):
+	    result = deque[front]
+	    if(front == rear):
+                front = rear = -1
+            else:
+		front = (front + 1) % MAX_SIZE
+            size--
+	    return result
+
+    func removeLast():
+        if(!isEmpty()):
+            result = deque[rear]
+	    if(rear == front):
+                front = rear = -1
+	    else:
+		rear = (rear - 1 + MAX_SIZE) % MAX_SIZE
+            size--
+            return result
+    
+    func isEmpty():
+        return size == 0
+
+    func isFull():
+        return size == MAX_SIZE
+
+}
+
+
+<<---------------------------------->>
+LinkedList
+
+class Node{
+
+    Node next
+    Node prev
+    int key
+
+    Node(int key){
+        this.key = key
+        next = null
+        prev = null
+    }
+
+}
+
+
+class LinkedList{
+
+    Node head
+    Node tail
+
+    !!func tailPush(data):
+        Node node = new Node(data)
+        if(head == null and tail == null):
+            head = tail = node
+        else:
+            tail.next = node
+            node.prev = tail
+            tail = node
+
+
+    func headPop():
+        if(head != null):
+            int key = head.key
+            if(head == tail):
+                head = tail = null
+            else:
+                head = head.next
+                head.prev = null
+            return key
+
+    !!func print():
+        if(head != null):
+	    Node current = head
+    	    while(current != null):
+		print(current.key + " ")
+                current = current.next
+}
+
+
+<<---------------------------------->>
+binary search
+
+func binarySearch(target, size, elements):
+    leftPointer = 0
+    rightPointer = size - 1
+    while(leftPointer<=rightPointer):
+        m = leftPointer + (rightPointer - leftPointer) //2
+        if(elements[m] == target):
+            return true
+        if(target > elements[m]):
+            leftPointer = m + 1
+        else:
+            rightPointer = m - 1
+
+
+<<---------------------------------->>
+BST
+
+class Node{
+    int data
+    Node left
+    Node right
+
+    Node(data){
+    this.data = data
+    }
+}
+
+class BST{
+    Node root
+
+    func add(data):
+        root = recursivelyInsert(data,root)
+
+    !!func recursivelyInsert(data,root):
+        if(root == null):
+            return new Node(data)
+        if(root.data > data):
+            root.left = recursivelyInsert(data, root.left)
+	else:
+	    root.right = recursivelyInsert(data, root.right)
+        return root
+
+    func inOrderTreeWalk(x):
+        if(x!=null):
+	    inOrderTreeWalk(x.left)
+	    print(x.key)
+	    inOrderTreeWalk(x.right)
+
+
+    !!func search(target, root):
+        if(root == null or root == target):
+            return root 
+        if(target < root):
+            search(target, root.left)
+	else:
+            search(target, root.right)
+
+    !!func iterativeSearch(target):
+        x = root
+        while (x != null or target != x):
+            if(x.key > target):
+    		x = x.left
+            else:
+		x = x.right
+        return x
+	
+    func treeMin():
+        x = root
+        while x.left != null:
+            x = x.left
+        return x
+
+    func treeMax():
+        x = root
+	while x.right !=null:
+            x = x.right
+	return x
+}
+
+<<---------------------------------->>
+heap
+
+class Heap{
+    int[] heap
+    int heapSize
+
+    
+    Heap(size){
+	heapSize = size
+    }    
+
+    func parent(i):
+       return (i-1) // 2
+
+    func left(i):
+        return (i * 2 + 1)
+
+    func right(i):
+        return (i * 2 + 1)
+
+
+    !!func minHeapify(i):
+        left = left(i)
+        right = right(i)
+        smallest = i
+
+        if(left < heapSize and array[left] < array[smallest]):
+           smallest = left
+        if(right < heapSize and array[right] < array[smallest]):
+            smallest = right
+        if(smallest!=i):
+            swap(smallest, i)
+            minHeapify(smallest)
+
+    func buildMinHeap():
+        for i = heapSize/2 - 1 down to 0:
+            minHeapify(i)
+
+}
+    
+
+<<---------------------------------->>
+Priority queue
+
+func heapMaximum():
+    return heap[0]
+
+
+func extractMax():
+    max = heapMaximum()
+    array[0] = array[heapSize - 1]
+    heapSize--
+    maxHeapify(0)
+    return max
+
+!!func increaseKey(key, index):
+    list.set(index, key)
+    while(index > 0 && array[index] > array[parent[index]]):
+        swap(index, parent[i])
+	i = parent[i]
+
+
+
+
+<<---------------------------------->>
+HeapSort
+
+func heapSortDesc():
+    buildMinHeap();
+    while(heapSize > 0):
+	swap(0, heapSize - 1)
+	heapSize --
+        minHeapify(0)
+
+
+
+
+<<---------------------------------->>
+QuickSort
+
+func quickSort(arr, begin, end):
+    while(end > begin):
+        p = partition(arr, begin, end)
+        quickSort(arr, begin, p - 1)
+        quickSort(arr, p + 1, end)
+
+
+func partition(arr, beg, end):
+    pivot = beg + (end -beg) // 2
+    swap(pivot, end)
+
+    cur = beg
+    for i = beg up to end:
+	if(arr[end] >= arr[i]):
+    	    swap(cur++, i)
+    swap(cur, end)
+    return cur
+
+
+<<------------------------------------------->>
+mergeSort descending 
+
+func mergeSort(array, beg, end):
+if end > beg:
+>>> mid = beg + (end -beg) / 2;
+>>> mergeSort(array, beg, mid)
+>>> mergeSort(array, mid + 1, end)
+>>> merge(array, beg, mid ,end)
+
+
+
+func merge(array, beg, mid, end):
+leftSize = mid - beg + 2
+rightSize = end - mid + 1
+left = new array[leftSize ]
+right = new array[rightSize ]
+
+left[leftSize] = - infinite(MINUS INFINITE потому что мы же сравниваем не как обычно а убывающее)
+right[rightSize] = - infinite
+
+
+for i = 1 to leftSize - 1:
+>>> left[i] = array[beg + i - 1]
+
+for i = 1 to rightSize - 1:
+>>> right[i] = array[mid + i]
+
+
+i = 0
+j = 0
+k = beg
+
+while k <= end:
+>>> if left[i] > right[j]:
+>>> >>> array[k] = left[i]
+>>> >>> i++ 
+>>> else:
+>>> >>> array[k] = right[j]
+>>> >>> j++
+>>> k++
+
+
+
+<<---------------------------------->>
+Rabin karp
+
+func hash(str, base, mod):{
+hash = 0
+for i = 1 to str.length:
+>>>hash = (hash * base + str[i])%mod;
+return hash
+
+}
+
+func rehash(oldHash, oldChar, newChar, base, baseLast, mod):{
+newHash = oldHash - (oldChar * baseLast) % mod
+newHash = (newHash + mod) % mod
+return (newHash * base + newChar) % mod
+}
+
+
+func find(str, patt, mod, base):{
+n = patt.length
+m = str.length
+pattHash = hash(patt, base, mod)
+strHash = hash(str[1:n],base, mod)
+
+baseLast = 1
+for i = 1 to n - 1:
+>>>baseLast = (baseLast * base) % mod
+
+if(pattHash == strHash and patt == str[0:n]):
+>>>return true;
+for i = 2 to m - n:
+>>> strHash = rehash(strHash, str.charAt(i - 1), str.charAt(i + n - 1), base, baseLast, mod)
+>>>if(pattHash == strHash and patt == str[i, n]:
+>>>>>>return true
+
+
+return false
+
+}
+
+<<-------------------------------------------->>
+Knuth - Morris - Pratt
+
+func prefixFunction(str, patt):
+s = patt + # + str
+int[] lps = new int[s.length]
+lps[1] = 0
+
+for i = 2 to s.length:
+>>> k = lps[i - 1]
+>>> while k > 0:
+>>> >>> if s.charAt(i) == s.charAt(k):
+>>> >>> >>> k++
+>>> >>> >>> break
+>>> >>> k = prefix[k-1]
+>>> if k == 0 and s.charAt(i) == s.charAt(k):
+>>> >>> k = 1
+>>> prefix[i] = k
+
+return prefix
+
+
+
+
+
+func kmpSearch(int[] prefix, kmpSize)
+res = 0
+iter pref from prefix:
+>>> if pref == kmpSize:
+>>> >>> res++
+return res
+
+
+
+
+<<------------------------------------------>>
+HashTables, низкий но если придет то hashFunction+insert
+
+func init(size)
+table = new array[size]
+for i = 1 to size:
+>>>table[i] = empty list
+
+return table
+
+func hashFunction(value, size)
+return value % size
+
+func insert(table, size, key)
+index = hashFunction(key, size)
+table[index].append(key)
+
+
+
+
+<<--------------------------------------------->>
+maxHeapify
+
+
+func maxHeapify(index)
+
+smallest = index
+left = left(index)
+right = right(index)
+
+if left < array.size and array[left] > array[index]:
+>>> index = left
+
+if right < array.size and array[right] > array[index]:
+>>> index = right
+
+if(smallest != index):
+>>> swap array[smallest] with array[index]
+>>> maxHeapify(index)
+
+
+<<---------------------------------------------->>
+
+
+master theorem 
+
+как строить формулу
+
+T(n) = 2T(n/3) + n^2
+
+n^2 = n^(log3(2) +- epsilon)
+
+если epsilon != 0 то берем ту функцию что больше допустим, тут больше будет n^2 так как log3(2) примерно n^0.8
+как определить epsilon == 0 or not 
+можно вот по функции - как мы видим log3(2) точно не будем равен двум и чтобы он стал n^2 ему надо добавить какой то эпсилон допустим
+
+T(n) = 2T(n/4) + n^2
+
+n^2 = n^(log4(2) +- epsilon)
+
+n^2=n^(2 +- epsilon)
+
+epsilon = 0 так как 
+
+n^2 = n^2 равны 
+
+при этом случий ответом будет 
+n^(log4(2)) * log(n)
+
+
+
+
+<<------------------------------------------------------->>
+
+longest prefix function 
+
+допустим есть стринг
+
+abaaab
+
+ prefix - все возможные текста с начала до конца не включая посл букву
+ suffix - все возможные текста с конца до начала не включая первую букву
+
+допустим тут prefix будет
+
+prefix = a, ab, aba, abaa, abaaa
+
+suffix = b, ab, aab, aaab, baaab
+
+что такое pi(какое то число) 
+это количество совпадений между prefix and suffix в сабстринге какого то текста начиная с начала до указанного числа, допустим 
+
+текст - abaaab
+find pi(3)
+значит сабстринг будет первые три буквы
+aba
+prefix = a, ab
+suffix = a, ba
+
+ответом будет 1 так как совпадений между prefix and suffix только один это a
+
+
+текст - kazakstan
+find pi(5)
+prefix = k, ka, kaz, kaza
+suffix = k, ak, zak, azak
+
+answer: 1 only k
+
+текст - aabaascas
+find pi(5)
+prefix = a, aa, aab, aaba
+suffix = a, aa, baa, abaa
+answer 2 only {a, aa}
+
+
+
+
+
+<<------------------------------------------------------------------->>
+directed undirected graphs 
+
+
+
+есть два вида графа один направленный, допустим односторонние дороги. В карте граф направленный будет с одной стороны в другую
+что означает что мы можем попасть только с одной стороны на другую никак иначе. Там только один граф сосед другому.
+
+и еще без направлений, это двусторонние дороги. Можно попасть в обеих с любой точки.Там оба графа будут друг другу соседями
+
+в проге графы обычно реализованы таким образом:
+
+List<List<Integer>> adj 
+
+получается это лист всех вершин где внутри листов будут листы соседей этих вершин типа так
+
+0 - 1  -  2
+\    |   /
+  \ _ 3 /
+
+
+у нас undirected , у таких графов все соседи у всех должны указываться. Тип указал что 0 сосед 1 то обязан указать что 1 сосед 0
+
+ adj:
+ 0 -> {1,3}
+ 1 -> {0,2,3}
+ 3 -> {0,1,2}
+ 2 -> {1, 3}
+
+поэтому при insert надо добавлять к обеим vertices новых соседей
+
+а если она будет directed 
+
+
+ 0 -> 1 <- 2 -> 3
+
+ adj:
+ 0 -> {1}
+ 1 -> {}
+ 2 -> {1, 3}
+ 3 -> {}
+
+поэтому при insert на такой граф мы меняем только list соседов того обьекта к которому добавляем
+
+
+
+<<---------------------------------------------------------------->>
+breadth-first search
+
+Base:
+
+func bfs(graph, start, size, target):
+queue = new Queue()
+visited = new boolean[size]
+queue.add(start)
+visited[start] = true
+
+while (!queue.isEmpty()):
+
+->->-> at = queue.poll()
+->->-> if at == target:
+->->-> ->->-> return true
+
+->->-> for neighboor in graph.get(at):
+->->-> ->->-> if(!visited[neighboor]):
+->->-> ->->-> ->->-> queue.add(neighboor)
+->->-> ->->-> ->->-> visited[neighboor] = true
+
+
+
+
+Zhanabekov enjoyers: 
+
+
+func bfs(graph, start, size):
+
+color = new int[size]
+discovery = new int[size]
+predecessor = new int[size]
+
+discovery = fillAll(MAX_VALUE)
+predecessor = fillAll(MAX_VALUE)
+
+queue = new Queue()
+queue.add(start)
+color[start] = 1 
+discovery[start] = 0
+
+
+while(!queue.isEmpty):
+->->-> at = queue.poll()
+->->-> for neighboor in graph.get(at):
+->->-> ->->-> if(color[neighboor] == 0):
+->->-> ->->-> ->->-> color[neighboor] = 1
+->->-> ->->-> ->->-> discovery[neighboor] = discovery[at] + 1
+->->-> ->->-> ->->-> predecessor[neighboor] = at
+->->-> ->->-> ->->-> queue.add(neighboor)
+->->-> color[at] = 2
+
+return discovery
+
+
+
+<<------------------------------------------------>>
+depth-first search
+
+
+Base:
+func dfs(graph, size):
+visited = new int[size]
+for i = 0 up to size:
+->->-> if(!visited[i]):
+->->-> ->->-> dfsVisit(graph, i, visited)
+
+
+
+
+func dfsVisit(graph, i, visited):
+visited[i] = true
+
+for elm in graph.get(i):
+->->-> if(!visited[elm]):
+->->-> ->->-> dfsVisit(graph, elm, visited)
+
+
+
+
+Zhanabekov enjoyers: 
+func init():
+int[] discovery
+int[] predecessor
+int[] color
+int[] finish
+int dfsTime
+
+
+func dfs(graph, size):
+discovery = new int[size]
+predecessor = new int[size]
+color = new int[size]
+finish = new int[size]
+
+for i = 0 up to size:
+->->-> discovery[i] = MAX_VALUE
+->->-> predecessor[i] = -1
+->->-> color[i] = 0
+->->-> finish = MAX_VALUE
+
+dfsTime = 0
+
+for i = 0 up to size:
+->->-> if (color[i] == 0):
+->->-> ->->-> dfsVisit(i, graph)
+
+return finish
+
+
+func dfsVisit(i, graph):
+color[i] = 1
+dfsTime++
+discovery[i] = dfsTime
+for neighboor in graph.get(i):
+->->-> if(color[neighboor] == 0):
+->->-> ->->-> predecessor[neighboor] = i
+->->-> ->->-> dfsVisit(neighboor, graph)
+dfsTime++
+finish[i] = dfsTime
+
+
+
+
+<<------------------------------------------------------------------>>
+topological sort
+
+func topSort(v, visited, adjacencyList, order):
+visited[v] = true
+
+for elm in adjacencyList[v]:
+->->-> if visited[elm] == false:
+->->->->->-> dfs(elm, visited, adjacencyList, order)
+
+order.addFront(v)
+
+OR
+
+func topSort(graph, size):
+visited = new int[size]
+order = new int[size]
+i = size - 1
+
+for at = 0 up to size
+->->-> if(!visited[at]):
+->->->->->-> i = dfs(i, at, graph, visited, order)
+
+return order
+
+
+func dfs(i, at, graph, visited, order):
+visited[at] = true
+for to in graph[at]:
+->->-> if(!vistied[to]):
+->->->->->-> i = dfs(i, to, graph, visited, order)
+
+order[i] = at
+return i-1
+
+
+
+<<------------------------------------------------------------------->>
+kruskal 
+
+class Edge():
+
+int from
+int to 
+int weight
+
+class Graph():
+
+int size
+predecessor = new int[size]
+List<Edge> graph
+
+
+func oldestPredecessor(i):
+int pred = predecessor[i]
+while(pred != predecessor[pred]):
+->->-> pred = predecessor[pred]
+return pred	
+
+
+
+func kruskal():
+cost = 0
+sort(graph, by weight)
+for i = 0 up to size:
+->->-> edge = graph.get(i)
+->->-> from = edge.from
+->->-> to = edge.to
+->->-> weight = edge.weight
+->->-> oldestFrom = oldestPredecessor(from)
+->->-> oldestTo = oldestPredecessor(to)
+->->-> if(oldestFrom != oldestTo):
+->->-> ->->-> predecessor[oldestTo] = oldestFrom
+->->-> ->->-> cost = cost + weight
+return cost
+
+
+ 
+
+<<------------------------------------------------------------------->>
+Prim
+
+vertices = new List<Edge> // [vertex, weight, pred]
+visited = new int[]
+
+func prim(root):
+
+cost = 0
+heap = new MinHeap(vertices)
+heap.decreaseKey(root, 0, root)
+heap.buildMinHeap() //по сути не нужен
+while(!heap.isEmpty):
+->->-> extracted = heap.extractMin()
+->->-> cost+= extracted.weight
+->->-> visited[extracted] = true
+->->-> for(edge in vertices.get(extracted.vertex):
+->->-> ->->-> if(!visited[edge.vertex]]):
+->->-> ->->-> ->->-> heap.decreaseKey(edge.vertex, edge.weight, extracted.vertex)
+return cost
+
+
+
+
+
+<<------------------------------------------------------------------->>
+
+ Dijkstra - shortest path from one node to all nodes ( ну кратчайший путь от ОДНОГО на любой)
+ Bellman-Ford - shortest path from one node to all nodes, negative edges allowed ( в дейкстре нельзя)
+ Floyd-Warshall - shortest path between all pairs of vertices, negative edges allowed
+
+<<------------------------------------------------------------------->>
+dijkstra
+
+vertices = new List<Edge> // [vertex, weight, pred]
+visited = new int[]
+
+func dijkstra (root, dest):
+heap = new minHeap(vertices)
+heap.decreaseKey(root, 0, root)
+heap.buildMinHeap()
+while(!heap.isEmpty()):
+->->-> Edge edge = heap.extractMin()
+->->-> visited[edge.from] = true
+->->-> initialCost = edge.weight
+->->-> for neighboor in adj.get(edge.from):
+->->-> ->->-> if(!visited[neighboor[0]]):
+->->-> ->->-> ->->-> heap.decreaseKey(neighboor, initialCost + neighboor[1], edge.from)
+->->-> if(edge.from == dest):
+->->-> ->->-> return edge.weight
+return -1
+
+
+<<------------------------------------------------------------------->>
+Floyd - Warshall negative cycle не учел
+
+negative cycle не учел
+
+func floydWarshall(matrix, n):
+    for k = 0 up to n:
+        for i = 0 up to n:
+	    for j = 0 up to n:
+		if(matrix[i][k] + matrix[k][j] < matrix[i][j]):
+		    matrix[i][j] = matrix[i][k] + matrix[k][j]
+
+
+учел:
+
+func floydWarshall(matrix, n):
+    for k = 0 up to n:
+        for i = 0 up to n:
+	    for j = 0 up to n:
+		if(matrix[i][k] + matrix[k][j] < matrix[i][j]):
+		    matrix[i][j] = matrix[i][k] + matrix[k][j]
+
+    for k = 0 up to n:
+        for i = 0 up to n:
+	    for j = 0 up to n:
+		if(matrix[i][k] != INFINITY and matrix[k][j] != INFINITY and  matrix[k][k] < 0):
+		    matrix[i][j] = NEGATIVE_INFINITY
+
+<<------------------------------------------------------------------->>
+Ford - Bellman
+    
+НЕ УЧИТЫВАЯ negative cycle:
+
+func fordBellman(edges, size, start):
+    double[] dist = new double[size]
+    dist.fill(INFINITE)
+    dist[start] = 0
+    boolean relaxedAnEdge
+
+    for v = 0 up to size-1: 
+        relaxedAnEdge = false
+        for (edge in edges):
+            if (dist[edge.from] != INFINITE and dist[edge.from] + edge.cost < dist[edge.to]):
+                dist[edge.to] = dist[edge.from] + edge.cost
+                relaxedAnEdge = true
+        if (!relaxedAnEdge):
+            break
+
+
+
+
+УЧИТЫВАЯ:
+
+
+func fordBellman(edges, size, start):
+    double[] dist = new double[size]
+    dist.fill(INFINITE)
+    dist[start] = 0
+    boolean relaxedAnEdge
+
+    for v = 0 up to size-1: 
+        relaxedAnEdge = false
+        for (edge in edges):
+            if (dist[edge.from] != INFINITE and dist[edge.from] + edge.cost < dist[edge.to]):
+                dist[edge.to] = dist[edge.from] + edge.cost
+                relaxedAnEdge = true
+        if (!relaxedAnEdge):
+            break
+    
+    for v = 0 up to size-1: 
+        relaxedAnEdge = false
+        for (edge in edges):
+            if (dist[edge.from] != INFINITE and dist[edge.from] + edge.cost < dist[edge.to]):
+                dist[edge.to] = NEGATIVE_INFINITY
+                relaxedAnEdge = true
+        if (!relaxedAnEdge):
+            break
+    	

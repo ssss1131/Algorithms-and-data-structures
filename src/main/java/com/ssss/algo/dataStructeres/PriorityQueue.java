@@ -4,11 +4,11 @@ import java.util.List;
 
 public class PriorityQueue {
     List<Integer> list ;
-    int heap_size;
+    int heapSize;
 
     public PriorityQueue(int list_size, List<Integer> list) {
         this.list = list;
-        heap_size = list_size;
+        heapSize = list_size;
     }
 
     public int parent(int i) {
@@ -28,10 +28,10 @@ public class PriorityQueue {
         int left = left(i);
         int right = right(i);
 
-        if (left < heap_size && list.get(largest) < list.get(left)) {
+        if (left < heapSize && list.get(largest) < list.get(left)) {
             largest = left;
         }
-        if (right < heap_size && list.get(largest) < list.get(right)) {
+        if (right < heapSize && list.get(largest) < list.get(right)) {
             largest = right;
         }
 
@@ -42,7 +42,7 @@ public class PriorityQueue {
     }
 
     public void buildMaxHeap() {
-        for (int i = heap_size / 2 - 1; i >= 0; i--) {
+        for (int i = heapSize / 2 - 1; i >= 0; i--) {
             maxHeapify(i);
         }
     }
@@ -53,16 +53,16 @@ public class PriorityQueue {
 
     public int heapExtractMax(){
         int max = heapMaximum();
-        list.set(0, list.get(heap_size - 1));
-        heap_size--;
+        list.set(0, list.get(heapSize - 1));
+        heapSize--;
         maxHeapify(0);
         return max;
     }
 
     public void maxHeapInsert(int key){
-        heap_size++;
+        heapSize++;
         list.add(Integer.MIN_VALUE);
-        heapIncreaseKey(key, heap_size - 1);
+        heapIncreaseKey(key, heapSize - 1);
     }
 
     private void heapIncreaseKey(int key, int i) {

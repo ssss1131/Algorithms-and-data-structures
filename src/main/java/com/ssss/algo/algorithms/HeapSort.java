@@ -60,13 +60,11 @@ public class HeapSort {
 
         public void heapSortDesc() {
             buildMinHeap();
-            swap(array, 0, heapSize - 1);
-            heapSize--;
 
             while (heapSize > 0) {
-                minHeapify(0);
                 swap(array, 0, heapSize - 1);
                 heapSize--;
+                minHeapify(0);
             }
         }
     }

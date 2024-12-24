@@ -10,7 +10,6 @@ public class GraphBFSDFS {
     private int[] predecessor; // Предыдущая вершина
     private int dfsTime; // Общее время для отслеживания шагов DFS
 
-    // Конструктор графа
     public GraphBFSDFS(int size) {
         this.size = size;
         adj = new ArrayList<>();
@@ -23,12 +22,10 @@ public class GraphBFSDFS {
         predecessor = new int[size];
     }
 
-    // Метод для добавления ребра
     public void addEdge(int v, int u) {
         adj.get(v).add(u);
     }
 
-    // Печать графа (списка смежности)
     public void print() {
         for (int i = 0; i < size; i++) {
             System.out.print(i + ": ");
@@ -39,72 +36,70 @@ public class GraphBFSDFS {
         }
     }
 
-    // Вспомогательный метод DFS для обработки одной вершины
     private void dfsVisit(int i) {
         dfsTime++;
-        discovery[i] = dfsTime; // Сохраняем время обнаружения
-        color[i] = 1; // Серый цвет (в процессе обработки)
+        discovery[i] = dfsTime;
+        color[i] = 1;
 
         for (int neighbor : adj.get(i)) {
-            if (color[neighbor] == 0) { // Если сосед ещё не посещён
-                predecessor[neighbor] = i; // Записываем предка
-                dfsVisit(neighbor); // Рекурсивно обрабатываем соседа
+            if (color[neighbor] == 0) {
+                predecessor[neighbor] = i;
+                dfsVisit(neighbor);
             }
         }
 
         dfsTime++;
-        finish[i] = dfsTime; // Сохраняем время завершения обработки
-        color[i] = 2; // Чёрный цвет (обработано)
+        finish[i] = dfsTime;
+        color[i] = 2;
     }
 
-    // Метод для выполнения DFS
+
+
     public int[] dfs() {
-        // Инициализация
-        Arrays.fill(color, 0); // Все вершины белые
-        Arrays.fill(discovery, Integer.MAX_VALUE); // Изначально все вершины не обнаружены
-        Arrays.fill(finish, Integer.MAX_VALUE); // Время завершения обработки неизвестно
-        Arrays.fill(predecessor, -1); // Предков нет
+
+        Arrays.fill(color, 0);
+        Arrays.fill(discovery, Integer.MAX_VALUE);
+        Arrays.fill(finish, Integer.MAX_VALUE);
+        Arrays.fill(predecessor, -1);
         dfsTime = 0;
 
-        // Запуск DFS для каждой непосещённой вершины
         for (int i = 0; i < size; i++) {
-            if (color[i] == 0) { // Если вершина белая
+            if (color[i] == 0) {
                 dfsVisit(i);
             }
         }
 
-        return predecessor; // Возвращаем массив времени завершения обработки
+        return finish;
     }
 
-    // Метод для выполнения BFS
     public int[] bfs(int start) {
-        int[] color = new int[size]; // Цвета вершин
-        int[] discovery = new int[size]; // Расстояние от начальной вершины
-        int[] predecessor = new int[size]; // Предыдущая вершина в пути
+        int[] color = new int[size];
+        int[] discovery = new int[size];
+        int[] predecessor = new int[size];
 
-        Arrays.fill(discovery, Integer.MAX_VALUE); // Изначально все расстояния максимальные
-        Arrays.fill(predecessor, -1); // Предков нет
+        Arrays.fill(discovery, Integer.MAX_VALUE);
+        Arrays.fill(predecessor, -1);
 
         Queue<Integer> queue = new LinkedList<>();
-        color[start] = 1; // Серый цвет (в процессе обработки)
-        discovery[start] = 0; // Расстояние до самой себя — 0
+        color[start] = 1;
+        discovery[start] = 0;
         queue.add(start);
 
         while (!queue.isEmpty()) {
             int curr = queue.poll();
 
             for (int neighbor : adj.get(curr)) {
-                if (color[neighbor] == 0) { // Если сосед ещё не посещён
-                    color[neighbor] = 1; // Серый цвет
-                    discovery[neighbor] = discovery[curr] + 1; // Считаем расстояние
-                    predecessor[neighbor] = curr; // Запоминаем предка
+                if (color[neighbor] == 0) {
+                    color[neighbor] = 1;
+                    discovery[neighbor] = discovery[curr] + 1;
+                    predecessor[neighbor] = curr;
                     queue.add(neighbor);
                 }
             }
-            color[curr] = 2; // Чёрный цвет (обработано)
+            color[curr] = 2;
         }
 
-        return discovery; // Возвращаем массив расстояний
+        return discovery;
     }
 }
 

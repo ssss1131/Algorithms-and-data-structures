@@ -28,7 +28,6 @@ public class FloydWarshall {
         dp = new double[n][n];
         next = new Integer[n][n];
 
-        // Copy input matrix and setup 'next' matrix for path reconstruction.
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (matrix[i][j] != POSITIVE_INFINITY) next[i][j] = j;
@@ -37,17 +36,11 @@ public class FloydWarshall {
         }
     }
 
-    /**
-     * Runs Floyd-Warshall to compute the shortest distance between every pair of nodes.
-     *
-     * @return The solved All Pairs Shortest Path (APSP) matrix.
-     */
     public double[][] getApspMatrix() {
         solve();
         return dp;
     }
 
-    // Executes the Floyd-Warshall algorithm.
     public void solve() {
         if (solved) return;
 
@@ -65,6 +58,14 @@ public class FloydWarshall {
 
         // Identify negative cycles by propagating the value 'NEGATIVE_INFINITY'
         // to every edge that is part of or reaches into a negative cycle.
+
+        /**
+         * Негативный цикл это когда есть цикл допустим состоит из рёбер с весами -2, 1, и 0, то сумма равна -1. Но так как цикл
+         * можно кружится бесконечно и бесконечно маленькую сумму получить. Поэтому такие циклы мы помечаем NEGATIVE_INFINITY.
+         * НО как понять что мы в цикле? Если dp[k][k] != 0 получается он в цикле так как он может достичь самого себя хотя мы в начале
+         * поставили 0, и если он меньше нуля значит цикл негативный. Также, а как понять какие ребра подвержены этому циклу чтобы всех
+         * пометить? Если есть путь с i->k и есть путь c k->j и k->k < 0, то это цикл и мы метим [i][j] = NEG_INF так как они в цикле.
+         */
         for (int k = 0; k < n; k++)
             for (int i = 0; i < n; i++)
                 for (int j = 0; j < n; j++)
@@ -99,10 +100,6 @@ public class FloydWarshall {
         return path;
     }
 
-    /* Example usage. */
-
-    // Creates a graph with n nodes. The adjacency matrix is constructed
-    // such that the value of going from a node to itself is 0.
     public static double[][] createGraph(int n) {
         double[][] matrix = new double[n][n];
         for (int i = 0; i < n; i++) {
@@ -152,7 +149,7 @@ public class FloydWarshall {
         // This shortest path from node 1 to node 3 is Infinity
         // ...
 
-        System.out.println();
+        System.out.println("--------------------------------------------------------------------");
 
         // Reconstructs the shortest paths from all nodes to every other nodes.
         for (int i = 0; i < n; i++) {
